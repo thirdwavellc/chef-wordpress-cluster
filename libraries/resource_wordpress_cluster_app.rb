@@ -12,7 +12,11 @@ class Chef
       attribute :deployment_group, kind_of: String, default: 'deploy'
       attribute :server_name, kind_of: String, default: nil
       attribute :server_aliases, kind_of: Array, default: []
+      attribute :scm, equal_to: ['git', 'hg'], required: true
+      attribute :ssh_import_ids, kind_of: Array, required: true
       attribute :development, equal_to: [true, false], default: false
+      attribute :consul_servers, kind_of: Array
+      attribute :datacenter, kind_of: String
     end
   end
 end

@@ -11,13 +11,27 @@ class Chef
       end
 
       action :create do
+        include_recipe 'apt::default' if platform_family? 'debian'
+        include_recipe 'yum::default' if platform_family? 'rhel'
+
+        include_recipe 'unzip::default'
+
         unless new_resource.development
+          include_recipe 'git::default' if new_resource.scm == 'git'
+          include_recipe 'hg::default' if new_resource.scm == 'hg'
+
           capistrano_user 'deploy' do
             group 'deploy'
             group_id 3000
           end
 
           include_recipe 'capistrano-base::ssh'
+
+          node.normal['ssh_import_id']['users'] =
+            [{ name: 'deploy',
+               github_accounts: new_resource.ssh_import_ids }]
+
+          include_recipe 'ssh-import-id::default'
         end
 
         capistrano_wordpress_app new_resource.app_name do
@@ -36,9 +50,11 @@ class Chef
             group new_resource.deployment_group
           end
 
-          include_recipe 'consul::default'
-          include_recipe 'consul-services::apache2'
-          include_recipe 'consul-services::consul-template'
+          consul_cluster_client new_resource.datacenter do
+            servers new_resource.consul_servers
+          end
+
+          service 'consul'
 
           node.normal['consul_template'] = {
             consul: '127.0.0.1:8500'
@@ -52,6 +68,9 @@ class Chef
               destination: "/var/www/#{new_resource.app_name}/shared/.env"
             }]
           end
+
+          include_recipe 'consul-services::apache2'
+          include_recipe 'consul-services::consul-template'
         end
       end
 
