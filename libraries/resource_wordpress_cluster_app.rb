@@ -16,6 +16,8 @@ class Chef
       attribute :ssh_import_ids, kind_of: Array, required: true
       attribute :development, equal_to: [true, false], default: false
       attribute :consul_servers, kind_of: Array
+      attribute :consul_acl_datacenter, kind_of: String, default: nil
+      attribute :consul_acl_token, kind_of: String, default: nil
       attribute :datacenter, kind_of: String
     end
   end
