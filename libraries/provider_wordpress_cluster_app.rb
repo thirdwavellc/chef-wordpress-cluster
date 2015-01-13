@@ -73,6 +73,36 @@ class Chef
 
           include_recipe 'consul-services::apache2'
           include_recipe 'consul-services::consul-template'
+
+          unless new_resource.csync2_hosts
+            Chef::Application.fatal!('You must specify csync2_hosts')
+          end
+
+          unless new_resource.csync2_key
+            Chef::Application.fatal!('You must specify a csync2_key')
+          end
+
+          include_recipe 'csync2::default'
+
+          file 'csync2.key' do
+            path '/etc/csync2.key'
+            content new_resource.csync2_key
+            action :create
+          end
+
+          csync2_hosts = new_resource.csync2_hosts
+
+          csync2_config '/etc/csync2.cfg' do
+            hosts csync2_hosts
+          end
+
+          unless new_resource.lsyncd_watched_dirs
+            Chef::Application.fatal!('You must specify lsyncd_watched_dirs')
+          end
+
+          node.normal['lsyncd']['watched_dirs'] = new_resource.lsyncd_watched_dirs
+
+          include_recipe 'lsyncd::default'
         end
       end
 

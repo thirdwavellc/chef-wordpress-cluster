@@ -14,6 +14,9 @@ class Chef
       attribute :server_aliases, kind_of: Array, default: []
       attribute :scm, equal_to: ['git', 'hg'], required: true
       attribute :ssh_import_ids, kind_of: Array, required: true
+      attribute :csync2_hosts, kind_of: Array, default: nil
+      attribute :csync2_key, kind_of: String, default: nil
+      attribute :lsyncd_watched_dirs, kind_of: Array, default: nil
       attribute :development, equal_to: [true, false], default: false
       attribute :consul_servers, kind_of: Array
       attribute :consul_acl_datacenter, kind_of: String, default: nil
