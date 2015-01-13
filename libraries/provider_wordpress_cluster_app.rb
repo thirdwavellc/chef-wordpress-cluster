@@ -103,6 +103,8 @@ class Chef
           node.normal['lsyncd']['watched_dirs'] = new_resource.lsyncd_watched_dirs
 
           include_recipe 'lsyncd::default'
+          include_recipe 'consul-services::lsyncd'
+          include_recipe 'consul-services::wordpress'
         end
       end
 
