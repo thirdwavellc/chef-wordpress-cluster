@@ -19,6 +19,7 @@ class Chef
       attribute :lsyncd_watched_dirs, kind_of: Array, default: nil
       attribute :development, equal_to: [true, false], default: false
       attribute :consul_servers, kind_of: Array
+      attribute :consul_bind_interface, kind_of: String, default: nil
       attribute :consul_acl_datacenter, kind_of: String, default: nil
       attribute :consul_acl_token, kind_of: String, default: nil
       attribute :datacenter, kind_of: String

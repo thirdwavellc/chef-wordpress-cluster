@@ -34,6 +34,7 @@ class Chef
 
         consul_cluster_client new_resource.datacenter do
           servers new_resource.consul_servers
+          bind_interface new_resource.consul_bind_interface if new_resource.consul_bind_interface
           acl_datacenter new_resource.consul_acl_datacenter if new_resource.consul_acl_datacenter
           acl_token new_resource.consul_acl_token if new_resource.consul_acl_token
         end

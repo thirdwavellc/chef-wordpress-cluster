@@ -15,6 +15,7 @@ class Chef
       attribute :mysql_root_password, kind_of: String, required: true
       attribute :development, equal_to: [true, false], default: false
       attribute :consul_servers, kind_of: Array
+      attribute :consul_bind_interface, kind_of: String, default: nil
       attribute :datacenter, kind_of: String
     end
   end

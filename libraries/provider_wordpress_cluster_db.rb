@@ -25,6 +25,7 @@ class Chef
         unless new_resource.development
           consul_cluster_client new_resource.datacenter do
             servers new_resource.consul_servers
+            bind_interface new_resource.consul_bind_interface if new_resource.consul_bind_interface
           end
 
           service 'consul'
