@@ -63,6 +63,7 @@ class Chef
 
         include_recipe 'consul-services::haproxy'
         include_recipe 'consul-services::consul-template'
+        include_recipe 'consul-services::keepalived'
 
         node.normal['keepalived'] = {
           instance_defaults: {
