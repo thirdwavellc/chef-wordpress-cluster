@@ -27,11 +27,9 @@ class Chef
 
           include_recipe 'capistrano-base::ssh'
 
-          node.normal['ssh_import_id']['users'] =
-            [{ name: 'deploy',
-               github_accounts: new_resource.ssh_import_ids }]
-
-          include_recipe 'ssh-import-id::default'
+          ssh_import_id 'deploy' do
+            github_accounts new_resource.github_accounts
+          end
         end
 
         capistrano_wordpress_app new_resource.app_name do
