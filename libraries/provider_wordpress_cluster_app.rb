@@ -42,6 +42,7 @@ class Chef
 
         unless new_resource.development
           capistrano_shared_file '.env.ctmpl' do
+            cookbook 'wordpress-cluster'
             template '.env.ctmpl.erb'
             deploy_root "/var/www/#{new_resource.app_name}"
             owner new_resource.deployment_user
