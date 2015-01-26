@@ -11,6 +11,9 @@ class Chef
       end
 
       action :create do
+        include_recipe 'apt::default' if platform_family? 'debian'
+        include_recipe 'yum::default' if platform_family? 'rhel'
+
         include_recipe 'mysql::server'
 
         capistrano_mysql_database new_resource.environment do
