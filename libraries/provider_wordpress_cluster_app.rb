@@ -69,6 +69,7 @@ class Chef
               source: "/var/www/#{new_resource.app_name}/shared/.env.ctmpl",
               destination: "/var/www/#{new_resource.app_name}/shared/.env"
             }]
+            notifies :restart, 'service[consul-template]', :delayed
           end
 
           include_recipe 'consul-services::apache2'

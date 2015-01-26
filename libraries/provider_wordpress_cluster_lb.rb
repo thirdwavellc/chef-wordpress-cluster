@@ -59,6 +59,7 @@ class Chef
             destination: '/etc/haproxy/haproxy.cfg',
             command: 'service haproxy restart'
           }]
+            notifies :restart, 'service[consul-template]', :delayed
         end
 
         include_recipe 'consul-services::haproxy'
