@@ -32,6 +32,13 @@ class Chef
           end
         end
 
+        node.override['apache']['prefork']['startservers'] = 50
+        node.override['apache']['prefork']['minspareservers'] = 50
+        node.override['apache']['prefork']['maxspareservers'] = 100
+        node.override['apache']['prefork']['serverlimit'] = 200
+        node.override['apache']['prefork']['maxrequestworkers'] = 200
+        node.override['apache']['prefork']['maxconnectionsperchild'] = 5_000
+
         capistrano_wordpress_app new_resource.app_name do
           deploy_root "/var/www/#{new_resource.app_name}"
           docroot "/var/www/#{new_resource.app_name}/current/web"
@@ -106,6 +113,15 @@ class Chef
           include_recipe 'lsyncd::default'
           include_recipe 'consul-services::lsyncd'
           include_recipe 'consul-services::wordpress'
+
+          node.normal['varnish']['version'] = '3.0.5'
+          node.normal['varnish']['vcl_cookbook'] = 'wordpress-cluster'
+          node.normal['varnish']['ttl'] = 15
+
+          include_recipe 'varnish::default'
+          include_recipe 'consul-services::varnish'
+
+          include_recipe 'wp-cli::default'
         end
       end
 

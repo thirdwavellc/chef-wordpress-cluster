@@ -24,8 +24,16 @@ class Chef
           mysql_root_password new_resource.mysql_root_password
         end
 
-
         unless new_resource.development
+          service 'mysql'
+
+          template '/etc/mysql/conf.d/wordpress-tuning.cnf' do
+            cookbook 'wordpress-cluster'
+            source 'wordpress-tuning.cnf.erb'
+            action :create
+            notifies :restart, 'service[mysql]', :delayed
+          end
+
           consul_cluster_client new_resource.datacenter do
             servers new_resource.consul_servers
             bind_interface new_resource.consul_bind_interface if new_resource.consul_bind_interface
