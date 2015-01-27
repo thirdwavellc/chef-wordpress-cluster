@@ -29,7 +29,7 @@ class Chef
           owner "root"
           group "root"
           mode 00644
-          notifies :restart, "service[haproxy]"
+          notifies :restart, "service[haproxy]", :delayed
         end
 
         consul_cluster_client new_resource.datacenter do
@@ -46,9 +46,11 @@ class Chef
         }
 
         template '/etc/haproxy/haproxy.cfg.ctmpl' do
+          cookbook 'wordpress-cluster'
           source 'haproxy.cfg.ctmpl.erb'
+          variables(sites: new_resource.sites, datacenter: new_resource.datacenter)
           action :create
-          notifies :restart, "service[haproxy]"
+          notifies :restart, "service[haproxy]", :delayed
         end
 
         include_recipe 'consul-template::default'
