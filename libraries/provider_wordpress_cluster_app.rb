@@ -54,6 +54,7 @@ class Chef
             deploy_root "/var/www/#{new_resource.app_name}"
             owner new_resource.deployment_user
             group new_resource.deployment_group
+            variables app_name: new_resource.app_name
           end
 
           consul_cluster_client new_resource.datacenter do
