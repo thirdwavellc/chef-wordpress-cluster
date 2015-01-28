@@ -38,5 +38,6 @@ frontend http
 backend <%= site[:name] %>_cluster
   {{range service "<%= site[:service] %>@<%= @datacenter %>"}}
   server {{.Name}} {{.Address}}:{{.Port}}{{end}}
+
 <% end %>
 
