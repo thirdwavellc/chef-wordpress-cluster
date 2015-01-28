@@ -77,10 +77,11 @@ class Chef
               source: "/var/www/#{new_resource.app_name}/shared/.env.ctmpl",
               destination: "/var/www/#{new_resource.app_name}/shared/.env"
             }]
-            notifies :restart, 'service[consul-template]', :delayed
           end
 
-          service 'consul-template'
+          service 'consul-template' do
+            action :restart
+          end
 
           include_recipe 'consul-services::apache2'
           include_recipe 'consul-services::consul-template'
@@ -95,6 +96,10 @@ class Chef
           include_recipe 'consul-services::varnish'
 
           include_recipe 'wp-cli::default'
+
+          service 'apache2' do
+            action :reload
+          end
         end
       end
 
