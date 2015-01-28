@@ -80,6 +80,8 @@ class Chef
             notifies :restart, 'service[consul-template]', :delayed
           end
 
+          service 'consul-template'
+
           include_recipe 'consul-services::apache2'
           include_recipe 'consul-services::consul-template'
 
