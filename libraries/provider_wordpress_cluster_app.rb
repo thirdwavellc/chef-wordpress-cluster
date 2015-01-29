@@ -98,7 +98,7 @@ class Chef
           include_recipe 'wp-cli::default'
 
           service 'apache2' do
-            action :reload
+            action :restart
           end
         end
       end
