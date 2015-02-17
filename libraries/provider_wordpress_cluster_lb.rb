@@ -69,35 +69,38 @@ class Chef
 
         include_recipe 'consul-services::haproxy'
         include_recipe 'consul-services::consul-template'
-        include_recipe 'consul-services::keepalived'
 
-        node.normal['keepalived'] = {
-          instance_defaults: {
-            state: new_resource.keepalived_state,
-            priority: new_resource.keepalived_priority
-          },
-          shared_address: "true",
-          check_scripts: {
-            chk_haproxy: {
-              script: 'killall -0 haproxy',
-              interval: 2,
-              weight: 2
-            }
-          },
-          instances: {
-            vi_1: {
-              ip_addresses: new_resource.keepalived_virtual_ip,
-              interface: new_resource.keepalived_interface,
-              track_script: 'chk_haproxy',
-              nopreempt: false,
-              advert_int: 1,
-              auth_type: :pass, # :pass or :ah
-              auth_pass: new_resource.keepalived_auth_pass
+        if new_resource.enable_keepalived
+          include_recipe 'consul-services::keepalived'
+
+          node.normal['keepalived'] = {
+            instance_defaults: {
+              state: new_resource.keepalived_state,
+              priority: new_resource.keepalived_priority
+            },
+            shared_address: "true",
+            check_scripts: {
+              chk_haproxy: {
+                script: 'killall -0 haproxy',
+                interval: 2,
+                weight: 2
+              }
+            },
+            instances: {
+              vi_1: {
+                ip_addresses: new_resource.keepalived_virtual_ip,
+                interface: new_resource.keepalived_interface,
+                track_script: 'chk_haproxy',
+                nopreempt: false,
+                advert_int: 1,
+                auth_type: :pass, # :pass or :ah
+                auth_pass: new_resource.keepalived_auth_pass
+              }
             }
           }
-        }
 
-        include_recipe 'keepalived'
+          include_recipe 'keepalived'
+        end
       end
     end
   end
