@@ -18,7 +18,6 @@ class Chef
           node.normal['mysql']['server_root_password'] = new_resource.mysql_root_password
           include_recipe 'mysql::server'
         end
-
         create_user_command = "create user '#{new_resource.user}'@'#{new_resource.user_host}' identified by '#{new_resource.user_password}'"
 
         execute "create db user '#{new_resource.user}'" do
@@ -37,7 +36,7 @@ class Chef
 
         execute "grant '#{new_resource.user}' privileges on db '#{db_name}'" do
           command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{grant_privileges_command}\""
-          not_if "mysql -u root -p#{new_resource.mysql_root_password} -D mysql -e \"select User from user\" | grep #{new_resource.user}"
+          not_if "mysql -u #{new_resource.user} -p#{new_resource.user_password} -e \"show databases\" | grep #{db_name}"
         end
 
         execute 'flush privileges' do
