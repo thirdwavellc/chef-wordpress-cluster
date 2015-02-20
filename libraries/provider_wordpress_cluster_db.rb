@@ -34,50 +34,45 @@ class Chef
         include_recipe 'apt::default' if platform_family? 'debian'
         include_recipe 'yum::default' if platform_family? 'rhel'
 
-        include_recipe 'mysql::server'
+        if new_resource.development
+          node.normal['mysql']['server_root_password'] = new_resource.mysql_root_password
+          include_recipe 'mysql::server'
+        end
+        create_user_command = "create user '#{new_resource.user}'@'#{new_resource.user_host}' identified by '#{new_resource.user_password}'"
 
-        capistrano_mysql_database new_resource.environment do
-          app_name new_resource.app_name
-          user new_resource.user
-          user_password new_resource.user_password
-          user_host new_resource.user_host
-          mysql_root_password new_resource.mysql_root_password
+        execute "create db user '#{new_resource.user}'" do
+          command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{create_user_command}\""
+          not_if "mysql -u root -p#{new_resource.mysql_root_password} -D mysql -e \"select User from user\" | grep #{new_resource.user}"
+        end
+
+        db_name = "#{new_resource.app_name}_#{new_resource.environment}"
+        create_db_command = "create database if not exists #{db_name}"
+
+        execute "create db '#{db_name}'" do
+          command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{create_db_command}\""
+        end
+
+        grant_privileges_command = "grant all privileges on #{db_name}.* to '#{new_resource.user}'@'#{new_resource.user_host}'"
+
+        execute "grant '#{new_resource.user}' privileges on db '#{db_name}'" do
+          command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{grant_privileges_command}\""
+          not_if "mysql -u #{new_resource.user} -p#{new_resource.user_password} -e \"show databases\" | grep #{db_name}"
+        end
+
+        execute 'flush privileges' do
+          command "mysql -u root -p#{new_resource.mysql_root_password} -e 'flush privileges'"
+          not_if "mysql -u root -p#{new_resource.mysql_root_password} -D mysql -e \"select User from user\" | grep #{new_resource.user}"
         end
 
         unless new_resource.development
-          service 'mysql'
-
-          template '/etc/mysql/conf.d/wordpress-tuning.cnf' do
-            cookbook 'wordpress-cluster'
-            source 'wordpress-tuning.cnf.erb'
-            action :create
-            notifies :restart, 'service[mysql]', :delayed
-          end
-
           consul_cluster_client new_resource.datacenter do
             servers new_resource.consul_servers
-            bind_interface new_resource.consul_bind_interface if new_resource.consul_bind_interface
+            bind_interface new_resource.consul_bind_interface
           end
 
           service 'consul'
 
           include_recipe 'consul-services::mysql'
-        end
-      end
-
-      action :delete do
-        capistrano_user 'deploy' do
-          action :delete
-        end
-
-        capistrano_wordpress_app new_resource.app_name do
-          deploy_root "/var/www/#{new_resource.app_name}"
-          action :delete
-        end
-
-        capistrano_shared_file '.env.ctmpl' do
-          deploy_root "/var/www/#{new_resource.app_name}"
-          action :delete
         end
       end
     end

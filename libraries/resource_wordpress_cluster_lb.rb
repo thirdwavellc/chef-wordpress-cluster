@@ -32,6 +32,7 @@ class Chef
       attribute :keepalived_virtual_ip, kind_of: String, required: true
       attribute :keepalived_interface, kind_of: String, required: true
       attribute :keepalived_auth_pass, kind_of: String, required: true
+      attribute :enable_keepalived, equal_to: [true, false], default: true
       attribute :consul_servers, kind_of: Array
       attribute :consul_bind_interface, kind_of: String, default: nil
       attribute :consul_acl_datacenter, kind_of: String, default: nil

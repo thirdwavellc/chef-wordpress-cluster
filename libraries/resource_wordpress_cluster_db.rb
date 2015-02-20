@@ -24,7 +24,7 @@ class Chef
   class Resource
     class WordpressClusterDb < Chef::Resource::LWRPBase
       self.resource_name = :wordpress_cluster_db
-      actions :create, :delete
+      actions :create
       default_action :create
 
       attribute :environment, kind_of: String, name_attribute: true
@@ -35,7 +35,7 @@ class Chef
       attribute :mysql_root_password, kind_of: String, required: true
       attribute :development, equal_to: [true, false], default: false
       attribute :consul_servers, kind_of: Array
-      attribute :consul_bind_interface, kind_of: String, default: nil
+      attribute :consul_bind_interface, kind_of: String, required: true
       attribute :datacenter, kind_of: String
     end
   end
