@@ -39,6 +39,7 @@ class Chef
       attribute :consul_acl_token, kind_of: String, default: nil
       attribute :datacenter, kind_of: String
       attribute :sites, kind_of: Array, required: true
+      attribute :basic_auth_users, kind_of: Array, default: []
     end
   end
 end

@@ -68,7 +68,7 @@ class Chef
         template '/etc/haproxy/haproxy.cfg.ctmpl' do
           cookbook 'wordpress-cluster'
           source 'haproxy.cfg.ctmpl.erb'
-          variables(sites: new_resource.sites, datacenter: new_resource.datacenter)
+          variables(sites: new_resource.sites, datacenter: new_resource.datacenter, basic_auth_users: new_resource.basic_auth_users)
           action :create
           notifies :restart, "service[haproxy]", :delayed
         end
