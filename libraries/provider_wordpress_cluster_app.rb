@@ -106,8 +106,6 @@ class Chef
           include_recipe 'consul-services::apache2'
           include_recipe 'consul-services::consul-template'
 
-          include_recipe 'consul-services::wordpress'
-
           node.normal['varnish']['version'] = '3.0.5'
           node.normal['varnish']['vcl_cookbook'] = 'wordpress-cluster'
           node.normal['varnish']['ttl'] = 15
