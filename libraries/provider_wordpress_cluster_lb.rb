@@ -91,7 +91,21 @@ class Chef
         include_recipe 'consul-services::consul-template'
 
         if new_resource.enable_keepalived
-          include_recipe 'consul-services::keepalived'
+          unless new_resource.keepalived_priority
+            Chef::Application.fatal!('You must specify the keepalived_priority')
+          end
+
+          unless new_resource.keepalived_virtual_ip
+            Chef::Application.fatal!('You must specify the keepalived_virtual_ip')
+          end
+
+          unless new_resource.keepalived_interface
+            Chef::Application.fatal!('You must specify the keepalived_interface')
+          end
+
+          unless new_resource.keepalived_auth_pass
+            Chef::Application.fatal!('You must specify the keepalived_auth_pass')
+          end
 
           node.normal['keepalived'] = {
             instance_defaults: {
@@ -120,6 +134,7 @@ class Chef
           }
 
           include_recipe 'keepalived'
+          include_recipe 'consul-services::keepalived'
         end
       end
     end

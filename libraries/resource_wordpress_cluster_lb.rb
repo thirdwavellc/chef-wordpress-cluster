@@ -27,11 +27,11 @@ class Chef
       actions :create
       default_action :create
 
-      attribute :keepalived_priority, kind_of: String, name_attribute: true
-      attribute :keepalived_state, equal_to: ['MASTER', 'BACKUP'], required: true
-      attribute :keepalived_virtual_ip, kind_of: String, required: true
-      attribute :keepalived_interface, kind_of: String, required: true
-      attribute :keepalived_auth_pass, kind_of: String, required: true
+      attribute :keepalived_state, equal_to: ['MASTER', 'BACKUP'], name_attribute: true
+      attribute :keepalived_priority, kind_of: String, default: nil
+      attribute :keepalived_virtual_ip, kind_of: String, default: nil
+      attribute :keepalived_interface, kind_of: String, default: nil
+      attribute :keepalived_auth_pass, kind_of: String, default: nil
       attribute :enable_keepalived, equal_to: [true, false], default: true
       attribute :consul_servers, kind_of: Array
       attribute :consul_bind_interface, kind_of: String, default: nil

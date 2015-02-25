@@ -1,6 +1,6 @@
 #
 # Cookbook:: wordpress-cluster
-# Resource:: wordpress_cluster_db
+# Resource:: wordpress_cluster_database
 #
 # Copyright 2014 Adam Krone <adam.krone@thirdwavellc.com>
 # Copyright 2014 Thirdwave, LLC
@@ -22,16 +22,15 @@ require 'chef/resource/lwrp_base'
 
 class Chef
   class Resource
-    class WordpressClusterDb < Chef::Resource::LWRPBase
-      self.resource_name = :wordpress_cluster_db
+    class WordpressClusterDatabase < Chef::Resource::LWRPBase
+      self.resource_name = :wordpress_cluster_database
       actions :create
       default_action :create
 
-      attribute :environment, kind_of: String, name_attribute: true
-      attribute :app_name, kind_of: String, required: true
+      attribute :db_name, kind_of: String, name_attribute: true
       attribute :user, kind_of: String, required: true
-      attribute :user_password, kind_of: String, required: true
       attribute :user_host, kind_of: String, default: '%'
+      attribute :user_password, kind_of: String, required: true
       attribute :mysql_root_password, kind_of: String, required: true
       attribute :development, equal_to: [true, false], default: false
       attribute :consul_servers, kind_of: Array

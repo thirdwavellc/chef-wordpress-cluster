@@ -1,8 +1,10 @@
-source "https://supermarket.getchef.com"
+source 'https://supermarket.getchef.com'
 
 metadata
 
 cookbook 'git'
+cookbook 'unzip', github: 'thirdwavellc/chef-unzip'
+cookbook 'ssh-hardening', github: 'TelekomLabs/chef-ssh-hardening', tag: 'v1.0.2'
 cookbook 'ssh-import-id', github: 'adamkrone/chef-ssh-import-id'
 cookbook 'capistrano-base', github: 'thirdwavellc/chef-capistrano-base'
 cookbook 'capistrano-wordpress', github: 'thirdwavellc/chef-capistrano-wordpress'
@@ -12,6 +14,7 @@ cookbook 'lsyncd', github: 'thirdwavellc/chef-lsyncd'
 cookbook 'consul', github: 'johnbellone/consul-cookbook'
 cookbook 'consul-cluster', github: 'thirdwavellc/chef-consul-cluster'
 cookbook 'consul-template', github: 'adamkrone/chef-consul-template'
+cookbook 'consul-alerts', github: 'adamkrone/chef-consul-alerts'
 cookbook 'consul-services', github: 'thirdwavellc/chef-consul-services'
 cookbook 'keepalived'
 cookbook 'varnish'

@@ -45,7 +45,9 @@ class Chef
             group_id 3000
           end
 
-          include_recipe 'capistrano-base::ssh'
+          node.normal['ssh']['allow_agent_forwarding'] = true
+
+          include_recipe 'ssh-hardening::default'
 
           ssh_import_id 'deploy' do
             github_accounts new_resource.github_accounts
@@ -60,8 +62,6 @@ class Chef
         node.override['apache']['prefork']['maxconnectionsperchild'] = 5_000
 
         capistrano_wordpress_app new_resource.app_name do
-          deploy_root "/var/www/#{new_resource.app_name}"
-          docroot "/var/www/#{new_resource.app_name}/current/web"
           deployment_user new_resource.deployment_user
           deployment_group new_resource.deployment_group
           server_name new_resource.server_name
@@ -71,10 +71,10 @@ class Chef
           capistrano_shared_file '.env.ctmpl' do
             cookbook 'wordpress-cluster'
             template '.env.ctmpl.erb'
-            deploy_root "/var/www/#{new_resource.app_name}"
+            app_root "/var/www/#{new_resource.app_name}"
             owner new_resource.deployment_user
             group new_resource.deployment_group
-            variables app_name: new_resource.app_name
+            variables(app_name: new_resource.app_name)
           end
 
           consul_cluster_client new_resource.datacenter do
@@ -123,16 +123,18 @@ class Chef
 
       action :delete do
         capistrano_user 'deploy' do
+          group_id 3000
           action :delete
         end
 
         capistrano_wordpress_app new_resource.app_name do
-          deploy_root "/var/www/#{new_resource.app_name}"
+          server_name new_resource.server_name
           action :delete
         end
 
         capistrano_shared_file '.env.ctmpl' do
-          deploy_root "/var/www/#{new_resource.app_name}"
+          template '.env.ctmpl.erb'
+          app_root "/var/www/#{new_resource.app_name}"
           action :delete
         end
       end
