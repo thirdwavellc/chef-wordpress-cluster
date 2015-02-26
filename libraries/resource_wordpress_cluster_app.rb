@@ -36,11 +36,6 @@ class Chef
       attribute :scm, equal_to: ['git', 'hg'], required: true
       attribute :github_accounts, kind_of: Array, required: true
       attribute :development, equal_to: [true, false], default: false
-      attribute :consul_servers, kind_of: Array
-      attribute :consul_bind_interface, kind_of: String, default: nil
-      attribute :consul_acl_datacenter, kind_of: String, default: nil
-      attribute :consul_acl_token, kind_of: String, default: nil
-      attribute :datacenter, kind_of: String
     end
   end
 end

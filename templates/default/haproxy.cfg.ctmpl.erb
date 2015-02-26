@@ -38,7 +38,7 @@ frontend http
 
 <% @sites.each do |site| %>
 backend <%= site[:name] %>_cluster
-  {{range service "<%= site[:service] %>@<%= @datacenter %>"}}
+  {{range service "<%= site[:service] %>"}}
   server {{.Name}} {{.Address}}:{{.Port}}{{end}}
 <% if @basic_auth_users.length && site.fetch(:basic_auth, false) %>
   acl AuthOkay_Consul http_auth(UsersFor_Consul)

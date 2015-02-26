@@ -78,15 +78,6 @@ class Chef
             variables(app_name: new_resource.app_name)
           end
 
-          consul_cluster_client new_resource.datacenter do
-            servers new_resource.consul_servers
-            bind_interface new_resource.consul_bind_interface if new_resource.consul_bind_interface
-            acl_datacenter new_resource.consul_acl_datacenter if new_resource.consul_acl_datacenter
-            acl_token new_resource.consul_acl_token if new_resource.consul_acl_token
-          end
-
-          service 'consul'
-
           node.normal['consul_template'] = {
             consul: '127.0.0.1:8500'
           }
@@ -103,16 +94,6 @@ class Chef
           service 'consul-template' do
             action :restart
           end
-
-          include_recipe 'consul-services::apache2'
-          include_recipe 'consul-services::consul-template'
-
-          node.normal['varnish']['version'] = '3.0.5'
-          node.normal['varnish']['vcl_cookbook'] = 'wordpress-cluster'
-          node.normal['varnish']['ttl'] = 15
-
-          include_recipe 'varnish::default'
-          include_recipe 'consul-services::varnish'
 
           include_recipe 'wp-cli::default'
 

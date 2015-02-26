@@ -66,17 +66,6 @@ class Chef
           command "mysql -u root -p#{new_resource.mysql_root_password} -e 'flush privileges'"
           not_if "mysql -u root -p#{new_resource.mysql_root_password} -D mysql -e \"select User from user\" | grep #{new_resource.user}"
         end
-
-        unless new_resource.development
-          consul_cluster_client new_resource.datacenter do
-            servers new_resource.consul_servers
-            bind_interface new_resource.consul_bind_interface
-          end
-
-          service 'consul'
-
-          include_recipe 'consul-services::mysql'
-        end
       end
     end
   end

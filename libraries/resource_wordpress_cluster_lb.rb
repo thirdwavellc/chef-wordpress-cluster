@@ -33,13 +33,8 @@ class Chef
       attribute :keepalived_interface, kind_of: String, default: nil
       attribute :keepalived_auth_pass, kind_of: String, default: nil
       attribute :enable_keepalived, equal_to: [true, false], default: true
-      attribute :consul_servers, kind_of: Array
-      attribute :consul_bind_interface, kind_of: String, default: nil
-      attribute :consul_acl_datacenter, kind_of: String, default: nil
-      attribute :consul_acl_token, kind_of: String, default: nil
-      attribute :datacenter, kind_of: String
       attribute :sites, kind_of: Array, required: true
-      attribute :basic_auth_users, kind_of: Array, default: []
+      attribute :basic_auth_users, kind_of: Array, default: nil
     end
   end
 end

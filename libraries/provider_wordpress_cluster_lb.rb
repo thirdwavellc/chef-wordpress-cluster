@@ -52,15 +52,6 @@ class Chef
           notifies :restart, "service[haproxy]", :delayed
         end
 
-        consul_cluster_client new_resource.datacenter do
-          servers new_resource.consul_servers
-          bind_interface new_resource.consul_bind_interface if new_resource.consul_bind_interface
-          acl_datacenter new_resource.consul_acl_datacenter if new_resource.consul_acl_datacenter
-          acl_token new_resource.consul_acl_token if new_resource.consul_acl_token
-        end
-
-        service 'consul'
-
         node.normal['consul_template'] = {
           consul: '127.0.0.1:8500'
         }
@@ -68,7 +59,7 @@ class Chef
         template '/etc/haproxy/haproxy.cfg.ctmpl' do
           cookbook 'wordpress-cluster'
           source 'haproxy.cfg.ctmpl.erb'
-          variables(sites: new_resource.sites, datacenter: new_resource.datacenter, basic_auth_users: new_resource.basic_auth_users)
+          variables(sites: new_resource.sites, basic_auth_users: new_resource.basic_auth_users)
           action :create
           notifies :restart, "service[haproxy]", :delayed
         end
@@ -86,9 +77,6 @@ class Chef
         service 'consul-template' do
           action :restart
         end
-
-        include_recipe 'consul-services::haproxy'
-        include_recipe 'consul-services::consul-template'
 
         if new_resource.enable_keepalived
           unless new_resource.keepalived_priority
@@ -134,7 +122,6 @@ class Chef
           }
 
           include_recipe 'keepalived'
-          include_recipe 'consul-services::keepalived'
         end
       end
     end
