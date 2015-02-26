@@ -30,6 +30,7 @@ class Chef
       attribute :app_name, kind_of: String, name_attribute: true
       attribute :deployment_user, kind_of: String, default: 'deploy'
       attribute :deployment_group, kind_of: String, default: 'deploy'
+      attribute :web_root, kind_of: String, default: 'web'
       attribute :server_name, kind_of: String, required: true
       attribute :server_aliases, kind_of: Array, default: nil
       attribute :scm, equal_to: ['git', 'hg'], required: true

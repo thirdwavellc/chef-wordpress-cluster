@@ -62,6 +62,7 @@ class Chef
         node.override['apache']['prefork']['maxconnectionsperchild'] = 5_000
 
         capistrano_wordpress_app new_resource.app_name do
+          web_root new_resource.web_root if new_resource.web_root
           deployment_user new_resource.deployment_user
           deployment_group new_resource.deployment_group
           server_name new_resource.server_name
