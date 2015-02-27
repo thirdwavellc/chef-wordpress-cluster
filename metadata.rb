@@ -4,7 +4,7 @@ maintainer_email 'adam.krone@thirdwavellc.com'
 license          'Apache v2.0'
 description      'Installs/Configures a high availability wordpress cluster'
 long_description 'Installs/Configures a high availability wordpress cluster'
-version          '0.1.0'
+version          '1.0.0'
 
 depends 'apt'
 depends 'yum'
