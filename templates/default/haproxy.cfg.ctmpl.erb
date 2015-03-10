@@ -30,6 +30,15 @@ frontend http
 
 <% @sites.each do |site| %>
   acl host_<%= site[:name] %> hdr(host) -i <%= site[:host] %>
+<% site[:redirects].each_with_index do |redirect, i| %>
+  acl host_<%= site[:name] %>_redirect_<%= i %> hdr(host) -i <%= redirect %>
+<% end if site[:redirects] %>
+<% end %>
+
+<% @sites.each do |site| %>
+<% site[:redirects].each_with_index do |redirect, i| %>
+  redirect location http://<%= site[:host] %> if host_<%= site[:name] %>_redirect_<%= i %>
+<% end if site[:redirects] %>
 <% end %>
 
 <% @sites.each do |site| %>
