@@ -54,12 +54,12 @@ class Chef
           end
         end
 
-        node.override['apache']['prefork']['startservers'] = 50
-        node.override['apache']['prefork']['minspareservers'] = 50
-        node.override['apache']['prefork']['maxspareservers'] = 100
-        node.override['apache']['prefork']['serverlimit'] = 200
-        node.override['apache']['prefork']['maxrequestworkers'] = 200
-        node.override['apache']['prefork']['maxconnectionsperchild'] = 5_000
+	node.override['apache']['prefork']['startservers'] = 10
+	node.override['apache']['prefork']['minspareservers'] = 10
+	node.override['apache']['prefork']['maxspareservers'] = 30
+	node.override['apache']['prefork']['serverlimit'] = 50
+	node.override['apache']['prefork']['maxrequestworkers'] = 50
+	node.override['apache']['prefork']['maxconnectionsperchild'] = 2_500
 
         capistrano_wordpress_app new_resource.app_name do
           web_root new_resource.web_root if new_resource.web_root
