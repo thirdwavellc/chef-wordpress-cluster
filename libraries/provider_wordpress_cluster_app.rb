@@ -54,6 +54,7 @@ class Chef
           end
         end
 
+	node.override['apache']['keepalive'] = 'Off'
 	node.override['apache']['prefork']['startservers'] = 10
 	node.override['apache']['prefork']['minspareservers'] = 10
 	node.override['apache']['prefork']['maxspareservers'] = 30
