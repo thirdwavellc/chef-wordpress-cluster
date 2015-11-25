@@ -48,10 +48,6 @@ class Chef
           node.normal['ssh']['allow_agent_forwarding'] = true
 
           include_recipe 'ssh-hardening::default'
-
-          ssh_import_id 'deploy' do
-            github_accounts new_resource.github_accounts
-          end
         end
 
 	node.override['apache']['keepalive'] = 'Off'

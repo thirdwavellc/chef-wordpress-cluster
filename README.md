@@ -23,7 +23,6 @@ doesn't include any recipes. Here is an overview of the LWRPs provided:
 | server_name      | ServerName in Apache config.                                     | String                      | true     | N/A      |
 | server_aliases   | List of ServerAlias in Apache config.                            | Array                       | false    | nil      |
 | scm              | Source code management tool used for the project                 | String ('git' or 'hg' only) | true     | N/A      |
-| github_accounts  | List of Github accounts for ssh public key installation.         | Array                       | true     | N/A      |
 | development      | Development flag for configuring local dev machines.             | Boolean                     | false    | false    |
 
 **Example:**
@@ -32,7 +31,6 @@ doesn't include any recipes. Here is an overview of the LWRPs provided:
 wordpress_cluster_app 'my-app' do
   server_name 'my-app.com'
   scm 'git'
-  github_accounts ['thirdwavellc']
 end
 ```
 
