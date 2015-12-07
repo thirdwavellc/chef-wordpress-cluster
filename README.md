@@ -24,6 +24,7 @@ doesn't include any recipes. Here is an overview of the LWRPs provided:
 | server_aliases   | List of ServerAlias in Apache config.                            | Array                       | false    | nil      |
 | scm              | Source code management tool used for the project                 | String ('git' or 'hg' only) | true     | N/A      |
 | development      | Development flag for configuring local dev machines.             | Boolean                     | false    | false    |
+| bedrock          | Whether or not to configure for bedrock wordpress apps.          | Boolean                     | false    | false    |
 
 **Example:**
 

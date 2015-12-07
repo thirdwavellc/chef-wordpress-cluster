@@ -66,13 +66,28 @@ class Chef
         end
 
         unless new_resource.development
-          capistrano_shared_file '.env.ctmpl' do
-            cookbook 'wordpress-cluster'
-            template '.env.ctmpl.erb'
-            app_root "/var/www/#{new_resource.app_name}"
-            owner new_resource.deployment_user
-            group new_resource.deployment_group
-            variables(app_name: new_resource.app_name)
+          if new_resource.bedrock
+            capistrano_shared_file '.env.ctmpl' do
+              cookbook 'wordpress-cluster'
+              template '.env.ctmpl.erb'
+              app_root "/var/www/#{new_resource.app_name}"
+              owner new_resource.deployment_user
+              group new_resource.deployment_group
+              variables(app_name: new_resource.app_name)
+            end
+          else
+            directory "/var/www/#{new_resource.app_name}/shared/web" do
+             owner new_resource.deployment_user
+             group new_resource.deployment_group
+            end
+
+            template "/var/www/#{new_resource.app_name}/shared/web/wp-config.php.ctmpl" do
+              cookbook 'wordpress-cluster'
+              source 'wp-config.php.ctmpl.erb'
+              owner new_resource.deployment_user
+              group new_resource.deployment_group
+              variables(app_name: new_resource.app_name)
+            end
           end
 
           node.normal['consul_template'] = {
@@ -81,11 +96,20 @@ class Chef
 
           include_recipe 'consul-template::default'
 
-          consul_template_config "#{new_resource.app_name}_env" do
-            templates [{
-              source: "/var/www/#{new_resource.app_name}/shared/.env.ctmpl",
-              destination: "/var/www/#{new_resource.app_name}/shared/.env"
-            }]
+          if new_resource.bedrock
+            consul_template_config "#{new_resource.app_name}_env" do
+              templates [{
+                source: "/var/www/#{new_resource.app_name}/shared/.env.ctmpl",
+                destination: "/var/www/#{new_resource.app_name}/shared/.env"
+              }]
+            end
+          else
+            consul_template_config "#{new_resource.app_name}_wp-config" do
+              templates [{
+                source: "/var/www/#{new_resource.app_name}/shared/web/wp-config.php.ctmpl",
+                destination: "/var/www/#{new_resource.app_name}/shared/web/wp-config.php"
+              }]
+            end
           end
 
           service 'consul-template' do
@@ -111,10 +135,16 @@ class Chef
           action :delete
         end
 
-        capistrano_shared_file '.env.ctmpl' do
-          template '.env.ctmpl.erb'
-          app_root "/var/www/#{new_resource.app_name}"
-          action :delete
+        if new_resource.bedrock
+          capistrano_shared_file '.env.ctmpl' do
+            template '.env.ctmpl.erb'
+            app_root "/var/www/#{new_resource.app_name}"
+            action :delete
+          end
+        else
+          file "/var/www/#{new_resource.app_name}/shared/web/wp-config.php.ctmpl" do
+            action :delete
+          end
         end
       end
     end
