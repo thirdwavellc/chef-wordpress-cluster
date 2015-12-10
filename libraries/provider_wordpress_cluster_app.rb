@@ -50,13 +50,13 @@ class Chef
           include_recipe 'ssh-hardening::default'
         end
 
-	node.override['apache']['keepalive'] = 'Off'
-	node.override['apache']['prefork']['startservers'] = 10
-	node.override['apache']['prefork']['minspareservers'] = 10
-	node.override['apache']['prefork']['maxspareservers'] = 30
-	node.override['apache']['prefork']['serverlimit'] = 50
-	node.override['apache']['prefork']['maxrequestworkers'] = 50
-	node.override['apache']['prefork']['maxconnectionsperchild'] = 2_500
+        node.override['apache']['keepalive'] = 'Off'
+        node.override['apache']['prefork']['startservers'] = 10
+        node.override['apache']['prefork']['minspareservers'] = 10
+        node.override['apache']['prefork']['maxspareservers'] = 30
+        node.override['apache']['prefork']['serverlimit'] = 50
+        node.override['apache']['prefork']['maxrequestworkers'] = 50
+        node.override['apache']['prefork']['maxconnectionsperchild'] = 2_500
 
         capistrano_wordpress_app new_resource.app_name do
           web_root new_resource.web_root if new_resource.web_root
