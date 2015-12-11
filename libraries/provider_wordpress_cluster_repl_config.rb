@@ -45,9 +45,9 @@ class Chef
           key_path '/etc/csync2.key'
         end
 
-        node.normal['lsyncd']['watched_dirs'] = new_resource.synced_dirs
-
-        include_recipe 'lsyncd::default'
+        lsyncd_config '/etc/lsyncd/lsyncd.conf.lua' do
+          watched_dirs new_resource.watched_dirs
+        end
 
         service 'consul'
 

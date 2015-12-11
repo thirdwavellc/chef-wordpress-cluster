@@ -30,7 +30,12 @@ class Chef
       attribute :name, kind_of: String, name_attribute: true
       attribute :csync2_key, kind_of: String, required: true
       attribute :csync2_hosts, kind_of: Array, required: true
+      attribute :lsyncd_sync_id, kind_of: String, required: true
       attribute :synced_dirs, kind_of: Array, required: true
+
+      def watched_dirs
+        synced_dirs.map { |dir| { source: dir, syncid: lsyncd_sync_id } }
+      end
     end
   end
 end
