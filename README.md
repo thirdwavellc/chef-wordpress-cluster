@@ -59,35 +59,6 @@ wordpress_cluster_database 'my_app_production' do
 end
 ```
 
-### wordpress_cluster_lb
-
-**Attributes:**
-
-| Name                  | Description                                         | Type                          | Required | Default |
-| --------------------- | --------------------------------------------------- | ----------------------------- | -------- | ------- |
-| keepalived_state      | Keepalived state (e.g. 'MASTER').                   | String ('MASTER' or 'BACKUP') | false    | nil     |
-| keepalived_priority   | Keepalived state priority (e.g. 100).               | String                        | false    | nil     |
-| keepalived_virtual_ip | Virtual IP address shared between keepalived nodes. | String                        | false    | nil     |
-| keepalived_interface  | Interface that Virtual IP should be assigned to.    | String                        | false    | nil     |
-| keepalived_auth_pass  | Auth password for keepalived.                       | String                        | false    | nil     |
-| enable_keepalived     | Whether or not keepalived should be enabled.        | Boolean                       | false    | true    |
-| sites                 | List of sites to configure in the haproxy.cfg.      | Array                         | true     | N/A     |
-| basic_auth_users      | List of users to configure for basic auth.          | Array                         | false    | nil     |
-
-**Note:** All keepalived attributes are required if enable_keepalived is true.
-
-**Example:**
-
-```ruby
-wordpress_cluster_lb 'MASTER' do
-  keepalived_priority '101'
-  keepalived_virtual_ip '1.2.3.4'
-  keepalived_interface 'eth1'
-  keepalived_auth_pass 'my-auth-pass'
-  sites [{ name: 'my-app', host: 'my-app.com', service: 'apache2' }]
-end
-```
-
 ### wordpress_cluster_repl_config
 
 **Attributes:**

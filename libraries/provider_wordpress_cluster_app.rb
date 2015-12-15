@@ -77,9 +77,9 @@ class Chef
             end
           else
             directory "/var/www/#{new_resource.app_name}/shared/web" do
-             owner new_resource.deployment_user
-             group new_resource.deployment_group
-             recursive true
+              owner new_resource.deployment_user
+              group new_resource.deployment_group
+              recursive true
             end
 
             template "/var/www/#{new_resource.app_name}/shared/web/wp-config.php.ctmpl" do
