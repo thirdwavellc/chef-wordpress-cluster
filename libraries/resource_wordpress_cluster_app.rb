@@ -33,9 +33,9 @@ class Chef
       attribute :web_root, kind_of: String, default: 'web'
       attribute :server_name, kind_of: String, required: true
       attribute :server_aliases, kind_of: Array, default: nil
-      attribute :scm, equal_to: ['git', 'hg'], required: true
-      attribute :github_accounts, kind_of: Array, required: true
+      attribute :scm, equal_to: %w(git hg), required: true
       attribute :development, equal_to: [true, false], default: false
+      attribute :bedrock, equal_to: [true, false], default: false
     end
   end
 end
