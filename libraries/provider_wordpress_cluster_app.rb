@@ -63,6 +63,7 @@ class Chef
           deployment_user new_resource.deployment_user
           deployment_group new_resource.deployment_group
           server_name new_resource.server_name
+          notifies :restart, 'service[apache2]', :delayed
         end
 
         unless new_resource.development
@@ -91,18 +92,13 @@ class Chef
             end
           end
 
-          node.normal['consul_template'] = {
-            consul: '127.0.0.1:8500'
-          }
-
-          include_recipe 'consul-template::default'
-
           if new_resource.bedrock
             consul_template_config "#{new_resource.app_name}_env" do
               templates [{
                 source: "/var/www/#{new_resource.app_name}/shared/.env.ctmpl",
                 destination: "/var/www/#{new_resource.app_name}/shared/.env"
               }]
+              notifies :restart, 'service[consul-template]', :delayed
             end
           else
             consul_template_config "#{new_resource.app_name}_wp-config" do
@@ -110,18 +106,11 @@ class Chef
                 source: "/var/www/#{new_resource.app_name}/shared/web/wp-config.php.ctmpl",
                 destination: "/var/www/#{new_resource.app_name}/shared/web/wp-config.php"
               }]
+              notifies :restart, 'service[consul-template]', :delayed
             end
           end
 
-          service 'consul-template' do
-            action :restart
-          end
-
           include_recipe 'wp-cli::default'
-
-          service 'apache2' do
-            action :restart
-          end
         end
       end
 
@@ -134,6 +123,7 @@ class Chef
         capistrano_wordpress_app new_resource.app_name do
           server_name new_resource.server_name
           action :delete
+          notifies :restart, 'service[apache2]', :delayed
         end
 
         if new_resource.bedrock
