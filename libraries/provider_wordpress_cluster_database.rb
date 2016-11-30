@@ -25,6 +25,7 @@ class Chef
     class WordpressClusterDatabase < Chef::Provider::LWRPBase
       include Chef::DSL::IncludeRecipe
       use_inline_resources if defined?(use_inline_resources)
+      provides :wordpress_cluster_database
 
       def whyrun_supported?
         true
@@ -45,6 +46,7 @@ class Chef
         create_user_command = "create user '#{new_resource.user}'@'#{new_resource.user_host}' identified by '#{new_resource.user_password}'"
 
         execute "create db user '#{new_resource.user}'" do
+          sensitive true
           command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{create_user_command}\""
           not_if "mysql -u root -p#{new_resource.mysql_root_password} -D mysql -e \"select User from user\" | grep #{new_resource.user}"
         end
@@ -52,17 +54,20 @@ class Chef
         create_db_command = "create database if not exists #{new_resource.db_name}"
 
         execute "create db '#{new_resource.db_name}'" do
+          sensitive true
           command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{create_db_command}\""
         end
 
         grant_privileges_command = "grant all privileges on #{new_resource.db_name}.* to '#{new_resource.user}'@'#{new_resource.user_host}'"
 
         execute "grant '#{new_resource.user}' privileges on db '#{new_resource.db_name}'" do
+          sensitive true
           command "mysql -u root -p#{new_resource.mysql_root_password} -e \"#{grant_privileges_command}\""
           not_if "mysql -u #{new_resource.user} -p#{new_resource.user_password} -e \"show databases\" | grep #{new_resource.db_name}"
         end
 
         execute 'flush privileges' do
+          sensitive true
           command "mysql -u root -p#{new_resource.mysql_root_password} -e 'flush privileges'"
           not_if "mysql -u root -p#{new_resource.mysql_root_password} -D mysql -e \"select User from user\" | grep #{new_resource.user}"
         end
