@@ -50,7 +50,9 @@ class Chef
           watched_dirs new_resource.watched_dirs
         end
 
-        service 'consul'
+        consul_service 'consul' do
+          action :nothing
+        end
 
         include_recipe 'consul-services::lsyncd'
       end

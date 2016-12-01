@@ -59,6 +59,10 @@ class Chef
         node.override['apache']['prefork']['maxrequestworkers'] = 50
         node.override['apache']['prefork']['maxconnectionsperchild'] = 2_500
 
+        service 'apache2' do
+          action :nothing
+        end
+
         capistrano_wordpress_app new_resource.app_name do
           web_root new_resource.web_root if new_resource.web_root
           deployment_user new_resource.deployment_user
@@ -91,6 +95,10 @@ class Chef
               group new_resource.deployment_group
               variables(app_name: new_resource.app_name)
             end
+          end
+
+          service 'consul-template' do
+            action :nothing
           end
 
           if new_resource.bedrock
