@@ -93,7 +93,7 @@ class Chef
               source 'wp-config.php.ctmpl.erb'
               owner new_resource.deployment_user
               group new_resource.deployment_group
-              variables(app_name: new_resource.app_name)
+              variables(app_name: new_resource.app_name, enable_ssl: new_resource.enable_ssl)
             end
           end
 

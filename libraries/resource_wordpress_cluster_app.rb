@@ -36,6 +36,7 @@ class Chef
       attribute :scm, equal_to: %w(git hg), required: true
       attribute :development, equal_to: [true, false], default: false
       attribute :bedrock, equal_to: [true, false], default: false
+      attribute :enable_ssl, equal_to: [true, false], default: false
     end
   end
 end
