@@ -45,10 +45,6 @@ class Chef
             group 'deploy'
             group_id 3000
           end
-
-          node.normal['ssh']['allow_agent_forwarding'] = true
-
-          include_recipe 'ssh-hardening::default'
         end
 
         node.override['apache']['keepalive'] = 'Off'
