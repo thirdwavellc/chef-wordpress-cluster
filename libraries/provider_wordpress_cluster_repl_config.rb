@@ -47,7 +47,7 @@ class Chef
         end
 
         lsyncd_config '/etc/lsyncd/lsyncd.conf.lua' do
-          watched_dirs new_resource.watched_dirs
+          watched_dirs new_resource.synced_dirs
         end
 
         consul_service 'consul' do
