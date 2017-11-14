@@ -39,7 +39,7 @@ class Chef
 
         unless new_resource.development
           include_recipe 'git::default' if new_resource.scm == 'git'
-          include_recipe 'hg::default' if new_resource.scm == 'hg'
+          package 'mercurial' if new_resource.scm == 'hg'
 
           capistrano_user 'deploy' do
             group 'deploy'
