@@ -55,17 +55,12 @@ class Chef
         node.override['apache']['prefork']['maxrequestworkers'] = 50
         node.override['apache']['prefork']['maxconnectionsperchild'] = 2_500
 
-        service 'apache2' do
-          action :nothing
-        end
-
         capistrano_wordpress_app new_resource.app_name do
           web_root new_resource.web_root if new_resource.web_root
           deployment_user new_resource.deployment_user
           deployment_group new_resource.deployment_group
           server_name new_resource.server_name
           server_aliases new_resource.server_aliases if new_resource.server_aliases
-          notifies :restart, 'service[apache2]', :delayed
         end
 
         unless new_resource.development
@@ -104,7 +99,6 @@ class Chef
                 source: "/var/www/#{new_resource.app_name}/shared/.env.ctmpl",
                 destination: "/var/www/#{new_resource.app_name}/shared/.env"
               }]
-              notifies :restart, 'service[consul-template]', :delayed
             end
           else
             consul_template_config "#{new_resource.app_name}_wp-config" do
@@ -112,7 +106,6 @@ class Chef
                 source: "/var/www/#{new_resource.app_name}/shared/web/wp-config.php.ctmpl",
                 destination: "/var/www/#{new_resource.app_name}/shared/web/wp-config.php"
               }]
-              notifies :restart, 'service[consul-template]', :delayed
             end
           end
 
@@ -129,7 +122,6 @@ class Chef
         capistrano_wordpress_app new_resource.app_name do
           server_name new_resource.server_name
           action :delete
-          notifies :restart, 'service[apache2]', :delayed
         end
 
         if new_resource.bedrock
